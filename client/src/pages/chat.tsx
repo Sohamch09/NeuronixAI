@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { apiRequest } from '@/lib/queryClient';
 import { Message, Conversation } from '@shared/schema';
-import { Bot, Send, Paperclip } from 'lucide-react';
+import { Bot, Send, Paperclip, Menu, MessageSquare, History } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface MessageResponse {
@@ -21,7 +21,9 @@ export default function Chat() {
   const [conversationId, setConversationId] = useState<string>('');
   const [message, setMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -45,6 +47,11 @@ export default function Chat() {
 
     createInitialConversation();
   }, [toast]);
+
+  // Fetch all conversations for sidebar
+  const { data: conversations = [] } = useQuery<Conversation[]>({
+    queryKey: ['/api/conversations'],
+  });
 
   // Fetch messages for the conversation
   const { data: messages = [], isLoading } = useQuery<Message[]>({
@@ -101,6 +108,45 @@ export default function Chat() {
     }
   };
 
+  const handleFileUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // For now, we'll just show a message about the file
+      // In a real implementation, you'd upload to a server
+      setMessage(`[File: ${file.name} (${file.type})] - File upload ready for processing`);
+      toast({
+        title: "File Selected",
+        description: `${file.name} is ready to upload`,
+      });
+    }
+  };
+
+  const createNewConversation = async () => {
+    try {
+      const response = await apiRequest('POST', '/api/conversations', {
+        title: 'New Chat'
+      });
+      const conversation: Conversation = await response.json();
+      setConversationId(conversation.id);
+      queryClient.invalidateQueries({ queryKey: ['/api/conversations'] });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create new conversation",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const switchConversation = (id: string) => {
+    setConversationId(id);
+    setShowSidebar(false);
+  };
+
 
 
   if (!conversationId) {
@@ -119,7 +165,75 @@ export default function Chat() {
     <div className="min-h-screen text-white font-inter">
       <ParticleBackground />
       
-      <div className="min-h-screen flex flex-col items-center justify-center p-4 relative z-10">
+      {/* Navigation Bar */}
+      <nav className="fixed top-0 left-0 right-0 z-20 bg-dark-navy/80 backdrop-blur-xl border-b border-white/10">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center space-x-3">
+            <Button
+              onClick={() => setShowSidebar(!showSidebar)}
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/10"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+            <h1 className="text-xl font-bold font-poppins bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              Neuronix AI
+            </h1>
+          </div>
+          <Button
+            onClick={createNewConversation}
+            variant="outline"
+            size="sm"
+            className="bg-darker-navy/50 text-gray-300 border-white/10 hover:border-primary hover:text-primary"
+          >
+            <MessageSquare className="h-4 w-4 mr-2" />
+            New Chat
+          </Button>
+        </div>
+      </nav>
+
+      {/* Sidebar */}
+      <div className={`fixed top-16 left-0 h-full w-80 bg-dark-navy/90 backdrop-blur-xl border-r border-white/10 transform transition-transform duration-300 z-10 ${
+        showSidebar ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        <div className="p-4">
+          <div className="flex items-center space-x-2 mb-4">
+            <History className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-semibold">Chat History</h2>
+          </div>
+          <div className="space-y-2 max-h-[calc(100vh-8rem)] overflow-y-auto">
+            {conversations.map((conv) => (
+              <button
+                key={conv.id}
+                onClick={() => switchConversation(conv.id)}
+                className={`w-full text-left p-3 rounded-lg transition-colors duration-200 ${
+                  conv.id === conversationId 
+                    ? 'bg-primary/20 border border-primary/30' 
+                    : 'hover:bg-white/5'
+                }`}
+              >
+                <div className="text-sm font-medium text-white truncate">
+                  {conv.title || 'New Chat'}
+                </div>
+                <div className="text-xs text-gray-400 mt-1">
+                  {new Date(conv.createdAt).toLocaleDateString()}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Overlay for mobile */}
+      {showSidebar && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-5 lg:hidden"
+          onClick={() => setShowSidebar(false)}
+        />
+      )}
+      
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 pt-20 relative z-10">
         {/* Chat Header */}
         <div className="w-full max-w-4xl mb-6 animate-in slide-in-from-top duration-500">
           <div className="text-center">
@@ -178,9 +292,20 @@ export default function Chat() {
                   disabled={sendMessageMutation.isPending}
                   style={{ color: '#ffffff', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
                 />
-                <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary transition-colors duration-200">
+                <button 
+                  onClick={handleFileUpload}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary transition-colors duration-200"
+                >
                   <Paperclip className="h-4 w-4" />
                 </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  accept="*/*"
+                  multiple={false}
+                />
               </div>
               <Button
                 onClick={handleSendMessage}
