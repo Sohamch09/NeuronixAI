@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a full-stack AI chatbot application built with React, Express, and TypeScript. The application features a modern chat interface with particle animations, real-time messaging, and AI-powered responses that can handle weather queries, news requests, calculations, and translations. The system uses an in-memory storage solution with support for PostgreSQL via Drizzle ORM.
+This is a full-stack AI chatbot application built with React, Express, and TypeScript. The application features a modern chat interface with animated particle effects, real-time messaging, and intelligent AI-powered responses using Google's Gemini API. The chatbot can handle any type of conversation, answer questions, write code, explain concepts, be creative, and provide natural conversational responses similar to ChatGPT. The system uses an in-memory storage solution with support for PostgreSQL via Drizzle ORM.
 
 ## User Preferences
 
@@ -40,11 +40,12 @@ Preferred communication style: Simple, everyday language.
 - Support for rich AI response formatting (weather cards, news cards, etc.)
 
 ### AI Integration
-- Weather data responses with location and conditions
-- News headline integration
-- Basic calculator functionality
-- Translation service placeholder
-- Extensible architecture for additional AI services
+- **Google Gemini API** - Real-time intelligent responses to any user query
+- Natural conversation capabilities similar to ChatGPT
+- Code generation and explanation
+- Creative writing and problem-solving
+- Educational content and concept explanations
+- Multi-domain expertise across various topics
 
 ### Storage Layer
 - In-memory storage implementation (`MemStorage`)
@@ -86,9 +87,9 @@ Preferred communication style: Simple, everyday language.
 - **Hot Reload**: Vite development server integration
 
 ### External API Integrations
-- Weather API (mock implementation - ready for real API)
-- News API (mock implementation - ready for real API)
-- Translation services (placeholder for future integration)
+- **Google Gemini API** - Live AI responses for natural conversation
+- Environment variable configuration for GEMINI_API_KEY
+- Error handling and fallback responses for API failures
 
 ## Deployment Strategy
 
