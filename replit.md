@@ -111,4 +111,20 @@ Preferred communication style: Simple, everyday language.
 - Drizzle configuration for database migrations
 - Vite aliases for development and build processes
 
-The application is designed to be easily deployable to platforms like Replit, with proper environment variable configuration and database provisioning support.
+## Recent Changes
+
+### Performance Optimizations (Latest)
+- **Particle System**: Reduced particle count from 125-150 to 50-80 for better performance
+- **Animation FPS**: Limited to 30 FPS with frame throttling for smoother performance
+- **Trail Effects**: Reduced trail frequency and length to minimize computational load
+- **Connection Lines**: Made connection rendering occasional to reduce draw calls
+- **Component Optimization**: Added React.memo to ChatMessage component
+- **Query Caching**: Optimized TanStack Query settings with appropriate stale times
+
+### Local Development Support
+- Created comprehensive README.md with setup instructions
+- Added .env.example for easy environment configuration
+- Documented all prerequisites and troubleshooting steps
+- Ready for VS Code local development with `npm install` and `npm run dev`
+
+The application is designed to be easily deployable to platforms like Replit, with proper environment variable configuration and database provisioning support. It can also be run locally in VS Code or any development environment.

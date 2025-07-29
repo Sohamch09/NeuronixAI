@@ -34,8 +34,8 @@ export function ParticleBackground() {
     const createParticle = (): Particle => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 1.2,
-      vy: (Math.random() - 0.5) * 1.2,
+      vx: (Math.random() - 0.5) * 0.6,
+      vy: (Math.random() - 0.5) * 0.6,
       radius: Math.random() * 3 + 0.5,
       opacity: Math.random() * 0.8 + 0.2,
       color: colors[Math.floor(Math.random() * colors.length)],
@@ -45,17 +45,20 @@ export function ParticleBackground() {
 
     const initParticles = () => {
       particlesRef.current = [];
-      const particleCount = Math.min(150, Math.max(125, Math.floor(canvas.width * canvas.height / 6000)));
+      // Reduce particle count for better performance
+      const particleCount = Math.min(80, Math.max(50, Math.floor(canvas.width * canvas.height / 15000)));
       for (let i = 0; i < particleCount; i++) {
         particlesRef.current.push(createParticle());
       }
     };
 
-    const updateParticle = (particle: Particle) => {
-      // Update trail
-      particle.trail.push({ x: particle.x, y: particle.y, opacity: particle.opacity });
-      if (particle.trail.length > 15) {
-        particle.trail.shift();
+    const updateParticle = (particle: Particle, time: number) => {
+      // Reduce trail frequency for performance
+      if (Math.random() < 0.3) {
+        particle.trail.push({ x: particle.x, y: particle.y, opacity: particle.opacity });
+        if (particle.trail.length > 8) {
+          particle.trail.shift();
+        }
       }
 
       particle.x += particle.vx;
@@ -64,20 +67,19 @@ export function ParticleBackground() {
       // Bounce off edges with some randomness
       if (particle.x < 0 || particle.x > canvas.width) {
         particle.vx *= -0.8;
-        particle.vx += (Math.random() - 0.5) * 0.2;
+        particle.vx += (Math.random() - 0.5) * 0.1;
       }
       if (particle.y < 0 || particle.y > canvas.height) {
         particle.vy *= -0.8;
-        particle.vy += (Math.random() - 0.5) * 0.2;
+        particle.vy += (Math.random() - 0.5) * 0.1;
       }
 
-      // Enhanced pulsing effect
-      particle.pulse += 0.02;
-      particle.opacity = 0.3 + Math.sin(particle.pulse) * 0.4 + Math.sin(Date.now() * 0.001 + particle.x * 0.01) * 0.2;
+      // Simpler pulsing effect using time parameter
+      particle.pulse += 0.01;
+      particle.opacity = 0.4 + Math.sin(particle.pulse) * 0.3;
       
-      // Slowly change radius for breathing effect
-      const baseRadius = 1.5;
-      particle.radius = baseRadius + Math.sin(Date.now() * 0.002 + particle.pulse) * 0.5;
+      // Simpler radius calculation
+      particle.radius = 1.2 + Math.sin(time * 0.001 + particle.pulse) * 0.3;
     };
 
     const drawParticle = (particle: Particle) => {
@@ -177,18 +179,33 @@ export function ParticleBackground() {
       }
     };
 
-    const animate = () => {
-      // Create a subtle fade effect instead of clearing
-      ctx.fillStyle = 'rgba(26, 26, 46, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    let lastFrameTime = 0;
+    const targetFPS = 30; // Reduced FPS for better performance
+    const frameInterval = 1000 / targetFPS;
 
-      drawFloatingOrbs();
-      drawConnections();
-      
-      particlesRef.current.forEach(particle => {
-        updateParticle(particle);
-        drawParticle(particle);
-      });
+    const animate = (currentTime: number) => {
+      if (currentTime - lastFrameTime >= frameInterval) {
+        // Create a subtle fade effect instead of clearing
+        ctx.fillStyle = 'rgba(26, 26, 46, 0.1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Reduce floating orbs for performance
+        if (Math.random() < 0.5) {
+          drawFloatingOrbs();
+        }
+        
+        // Only draw connections occasionally for performance
+        if (Math.random() < 0.3) {
+          drawConnections();
+        }
+        
+        particlesRef.current.forEach(particle => {
+          updateParticle(particle, currentTime);
+          drawParticle(particle);
+        });
+
+        lastFrameTime = currentTime;
+      }
 
       animationIdRef.current = requestAnimationFrame(animate);
     };

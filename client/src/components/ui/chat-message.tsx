@@ -1,5 +1,6 @@
+import { memo } from 'react';
 import { Message } from '@shared/schema';
-import { Bot, User, Sun, CloudSun, Newspaper, Calculator, Languages, Clock } from 'lucide-react';
+import { Bot, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ChatMessageProps {
@@ -8,7 +9,7 @@ interface ChatMessageProps {
   aiType?: string;
 }
 
-export function ChatMessage({ message, aiData, aiType }: ChatMessageProps) {
+export const ChatMessage = memo(function ChatMessage({ message, aiData, aiType }: ChatMessageProps) {
   const isUser = message.isUser === "true";
   const timestamp = new Date(message.timestamp).toLocaleTimeString([], {
     hour: '2-digit',
@@ -54,4 +55,4 @@ export function ChatMessage({ message, aiData, aiType }: ChatMessageProps) {
       )}
     </div>
   );
-}
+});
