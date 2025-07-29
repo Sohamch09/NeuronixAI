@@ -45,7 +45,7 @@ export function ParticleBackground() {
 
     const initParticles = () => {
       particlesRef.current = [];
-      const particleCount = Math.min(120, Math.floor(canvas.width * canvas.height / 8000));
+      const particleCount = Math.min(150, Math.max(125, Math.floor(canvas.width * canvas.height / 6000)));
       for (let i = 0; i < particleCount; i++) {
         particlesRef.current.push(createParticle());
       }

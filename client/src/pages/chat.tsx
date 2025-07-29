@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { apiRequest } from '@/lib/queryClient';
 import { Message, Conversation } from '@shared/schema';
-import { Bot, Send, Paperclip, CloudSun, Newspaper, Calculator, Languages } from 'lucide-react';
+import { Bot, Send, Paperclip } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface MessageResponse {
@@ -101,19 +101,7 @@ export default function Chat() {
     }
   };
 
-  const handleQuickAction = (action: string) => {
-    const quickMessages = {
-      creative: "Write a short creative story",
-      explain: "Explain quantum physics in simple terms",
-      code: "Write a Python function to sort a list",
-      help: "What can you help me with today?"
-    };
-    
-    const quickMessage = quickMessages[action as keyof typeof quickMessages];
-    if (quickMessage) {
-      setMessage(quickMessage);
-    }
-  };
+
 
   if (!conversationId) {
     return (
@@ -139,7 +127,7 @@ export default function Chat() {
               <Bot className="h-8 w-8 text-white" />
             </div>
             <h1 className="text-3xl md:text-4xl font-bold font-poppins mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              AI Assistant
+              Neuronix AI
             </h1>
             <p className="text-gray-300 text-lg">Your intelligent conversation partner</p>
           </div>
@@ -155,7 +143,7 @@ export default function Chat() {
               <ChatMessage 
                 message={{
                   id: 'welcome',
-                  content: "Hello! I'm your AI assistant powered by Google's Gemini. I can help you with anything - answer questions, write code, explain concepts, be creative, solve problems, and much more. What would you like to chat about?",
+                  content: "Hello! I'm Neuronix AI, your intelligent assistant powered by Google's Gemini. I can help you with anything - answer questions, write code, explain concepts, be creative, solve problems, and much more. What would you like to chat about?",
                   isUser: "false",
                   timestamp: new Date(),
                   conversationId
@@ -204,45 +192,7 @@ export default function Chat() {
               </Button>
             </div>
 
-            {/* Quick Actions */}
-            <div className="mt-4 flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleQuickAction('creative')}
-                className="bg-darker-navy/50 text-gray-300 border-white/10 hover:border-primary hover:text-primary transition-all duration-200"
-              >
-                <Bot className="h-3 w-3 mr-1" />
-                Creative
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleQuickAction('explain')}
-                className="bg-darker-navy/50 text-gray-300 border-white/10 hover:border-primary hover:text-primary transition-all duration-200"
-              >
-                <Newspaper className="h-3 w-3 mr-1" />
-                Explain
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleQuickAction('code')}
-                className="bg-darker-navy/50 text-gray-300 border-white/10 hover:border-primary hover:text-primary transition-all duration-200"
-              >
-                <Calculator className="h-3 w-3 mr-1" />
-                Code
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleQuickAction('help')}
-                className="bg-darker-navy/50 text-gray-300 border-white/10 hover:border-primary hover:text-primary transition-all duration-200"
-              >
-                <Languages className="h-3 w-3 mr-1" />
-                Help
-              </Button>
-            </div>
+
           </div>
         </div>
 
