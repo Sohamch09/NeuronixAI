@@ -186,8 +186,9 @@ export default function Chat() {
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Type your message..."
-                  className="w-full bg-darker-navy/50 text-white placeholder-gray-400 rounded-xl px-4 py-3 pr-12 border border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+                  className="w-full bg-black/30 text-white placeholder-gray-400 rounded-xl px-4 py-3 pr-12 border border-white/20 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 backdrop-blur-sm"
                   disabled={sendMessageMutation.isPending}
+                  style={{ color: '#ffffff', backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
                 />
                 <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary transition-colors duration-200">
                   <Paperclip className="h-4 w-4" />
