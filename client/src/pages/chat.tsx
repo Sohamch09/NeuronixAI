@@ -103,10 +103,10 @@ export default function Chat() {
 
   const handleQuickAction = (action: string) => {
     const quickMessages = {
-      weather: "What's the weather like today?",
-      news: "Show me the latest news",
-      calculate: "Calculate 15% tip on $85",
-      translate: 'Translate "Hello, how are you?" to Spanish'
+      creative: "Write a short creative story",
+      explain: "Explain quantum physics in simple terms",
+      code: "Write a Python function to sort a list",
+      help: "What can you help me with today?"
     };
     
     const quickMessage = quickMessages[action as keyof typeof quickMessages];
@@ -155,7 +155,7 @@ export default function Chat() {
               <ChatMessage 
                 message={{
                   id: 'welcome',
-                  content: "Hello! I'm your AI assistant. I can help you with various tasks, provide real-time information, and answer your questions. How can I assist you today?",
+                  content: "Hello! I'm your AI assistant powered by Google's Gemini. I can help you with anything - answer questions, write code, explain concepts, be creative, solve problems, and much more. What would you like to chat about?",
                   isUser: "false",
                   timestamp: new Date(),
                   conversationId
@@ -209,38 +209,38 @@ export default function Chat() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => handleQuickAction('weather')}
+                onClick={() => handleQuickAction('creative')}
                 className="bg-darker-navy/50 text-gray-300 border-white/10 hover:border-primary hover:text-primary transition-all duration-200"
               >
-                <CloudSun className="h-3 w-3 mr-1" />
-                Weather
+                <Bot className="h-3 w-3 mr-1" />
+                Creative
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => handleQuickAction('news')}
+                onClick={() => handleQuickAction('explain')}
                 className="bg-darker-navy/50 text-gray-300 border-white/10 hover:border-primary hover:text-primary transition-all duration-200"
               >
                 <Newspaper className="h-3 w-3 mr-1" />
-                News
+                Explain
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => handleQuickAction('calculate')}
+                onClick={() => handleQuickAction('code')}
                 className="bg-darker-navy/50 text-gray-300 border-white/10 hover:border-primary hover:text-primary transition-all duration-200"
               >
                 <Calculator className="h-3 w-3 mr-1" />
-                Calculate
+                Code
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => handleQuickAction('translate')}
+                onClick={() => handleQuickAction('help')}
                 className="bg-darker-navy/50 text-gray-300 border-white/10 hover:border-primary hover:text-primary transition-all duration-200"
               >
                 <Languages className="h-3 w-3 mr-1" />
-                Translate
+                Help
               </Button>
             </div>
           </div>

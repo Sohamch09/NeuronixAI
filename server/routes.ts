@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertMessageSchema, insertConversationSchema } from "@shared/schema";
 import { z } from "zod";
+import { generateAIResponse } from "./gemini";
 
 // External API services (can be extended with real API keys)
 async function getWeatherData(location: string = "New York") {
@@ -65,79 +66,23 @@ async function translateText(text: string, targetLang: string = "es") {
 }
 
 async function processMessageWithAI(message: string) {
-  const lowerMessage = message.toLowerCase();
-  
-  // Weather queries
-  if (lowerMessage.includes('weather')) {
-    const weatherData = await getWeatherData();
-    return {
-      type: 'weather',
-      data: weatherData,
-      response: `Here's the current weather in ${weatherData.location}:`
-    };
-  }
-  
-  // News queries
-  if (lowerMessage.includes('news')) {
-    const newsData = await getNewsData();
-    return {
-      type: 'news',
-      data: newsData,
-      response: `Here's the latest news:`
-    };
-  }
-  
-  // Calculator queries
-  if (lowerMessage.includes('calculate') || /[\d+\-*/]/.test(message)) {
-    const mathExpression = message.replace(/calculate|what is|=|\?/gi, '').trim();
-    const calculation = await calculateExpression(mathExpression);
-    return {
-      type: 'calculation',
-      data: calculation,
-      response: calculation.valid ? 
-        `The result of ${calculation.expression} is ${calculation.result}` :
-        "I couldn't calculate that expression. Please check the format."
-    };
-  }
-  
-  // Translation queries
-  if (lowerMessage.includes('translate')) {
-    const textMatch = message.match(/"([^"]+)"/);
-    const langMatch = message.match(/to (\w+)/i);
+  try {
+    // Use Gemini AI to generate intelligent responses
+    const aiResponse = await generateAIResponse(message);
     
-    if (textMatch) {
-      const translation = await translateText(textMatch[1], langMatch?.[1] || 'es');
-      return {
-        type: 'translation',
-        data: translation,
-        response: `Translation: "${translation.translated}"`
-      };
-    }
-  }
-  
-  // Time queries
-  if (lowerMessage.includes('time')) {
-    const currentTime = new Date().toLocaleTimeString();
     return {
-      type: 'time',
-      data: { time: currentTime },
-      response: `The current time is ${currentTime}.`
+      type: 'ai_response',
+      data: {},
+      response: aiResponse
+    };
+  } catch (error) {
+    console.error('AI processing error:', error);
+    return {
+      type: 'error',
+      data: {},
+      response: "I'm experiencing some technical difficulties. Please try again in a moment."
     };
   }
-  
-  // Default responses
-  const defaultResponses = [
-    "I understand your question. How can I help you further?",
-    "That's interesting! What would you like to know more about?",
-    "I'm here to assist you. Feel free to ask me about weather, news, calculations, or translations.",
-    "Thank you for your message. Is there anything specific I can help you with?",
-  ];
-  
-  return {
-    type: 'general',
-    data: {},
-    response: defaultResponses[Math.floor(Math.random() * defaultResponses.length)]
-  };
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
