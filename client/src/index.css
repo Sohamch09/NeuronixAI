@@ -24,7 +24,7 @@
   --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
   
-  /* Custom chatbot colors */
+  /*  chatbot colors */
   --dark-navy: hsl(230, 35%, 14%);
   --darker-navy: hsl(228, 45%, 12%);
   --particle-cyan: hsl(192, 100%, 50%);
@@ -144,6 +144,4 @@
 .animate-typing {
   animation: typing 1.5s infinite;
 }
-
-/* Import fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');

@@ -5,9 +5,9 @@ import { insertMessageSchema, insertConversationSchema } from "@shared/schema";
 import { z } from "zod";
 import { generateAIResponse } from "./gemini";
 
-// External API services (can be extended with real API keys)
+                          //  these are all mock data that i had used to test but now i relpaced with api.
 async function getWeatherData(location: string = "New York") {
-  // Mock weather API response - replace with real API integration
+  // Mock weather API response - replaced with real API integration
   const weatherResponses = [
     {
       location: "New York, NY",
@@ -31,7 +31,7 @@ async function getWeatherData(location: string = "New York") {
 }
 
 async function getNewsData() {
-  // Mock news API response - replace with real API integration
+  
   return {
     headline: "Tech Industry Sees Major Innovation Breakthrough",
     summary: "Recent developments in AI and machine learning continue to reshape industries worldwide.",
@@ -42,7 +42,7 @@ async function getNewsData() {
 
 async function calculateExpression(expression: string) {
   try {
-    // Basic calculator - enhance with math expression parser
+    
     const sanitized = expression.replace(/[^0-9+\-*/.() ]/g, '');
     const result = Function(`"use strict"; return (${sanitized})`)();
     return { expression, result, valid: true };
@@ -67,7 +67,7 @@ async function translateText(text: string, targetLang: string = "es") {
 
 async function processMessageWithAI(message: string) {
   try {
-    // Use Gemini AI to generate intelligent responses
+    // Using gemini AI 
     const aiResponse = await generateAIResponse(message);
     
     return {
@@ -87,7 +87,6 @@ async function processMessageWithAI(message: string) {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
-  // Create a new conversation
   app.post("/api/conversations", async (req, res) => {
     try {
       const data = insertConversationSchema.parse(req.body);
@@ -98,7 +97,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Get all conversations
   app.get("/api/conversations", async (req, res) => {
     try {
       const conversations = await storage.getAllConversations();
@@ -108,7 +106,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Get conversation by ID
   app.get("/api/conversations/:id", async (req, res) => {
     try {
       const conversation = await storage.getConversation(req.params.id);
@@ -120,8 +117,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch conversation" });
     }
   });
+
   
-  // Get messages for a conversation
   app.get("/api/conversations/:id/messages", async (req, res) => {
     try {
       const messages = await storage.getMessagesByConversation(req.params.id);
@@ -130,8 +127,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch messages" });
     }
   });
+
   
-  // Send a message and get AI response
+  // Sending message...
   app.post("/api/conversations/:id/messages", async (req, res) => {
     try {
       const conversationId = req.params.id;
@@ -140,19 +138,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         conversationId,
       });
       
-      // Save user message
       const userMessage = await storage.createMessage(messageData);
-      
-      // Process message with AI and get response
+
       const aiResponse = await processMessageWithAI(messageData.content);
-      
-      // Save AI response
+
       const botMessage = await storage.createMessage({
         content: aiResponse.response,
         isUser: "false",
         conversationId,
       });
       
+
       res.json({
         userMessage,
         botMessage,

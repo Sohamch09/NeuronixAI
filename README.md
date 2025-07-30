@@ -17,8 +17,6 @@ A dynamic AI chatbot web application powered by Google's Gemini AI, offering int
 - **Backend**: Express.js + TypeScript
 - **Styling**: Tailwind CSS + shadcn/ui
 - **AI**: Google Gemini API
-- **Database**: Drizzle ORM (in-memory storage)
-- **State Management**: TanStack Query
 
 ## Prerequisites
 
@@ -35,28 +33,6 @@ git clone <your-repo-url>
 cd neuronix-ai
 npm install
 ```
-
-### 2. Environment Setup
-
-Create a `.env` file in the root directory:
-
-```env
-# Required: Google Gemini API Key
-GEMINI_API_KEY=your_gemini_api_key_here
-
-# Optional: Database (uses in-memory storage by default)
-DATABASE_URL=your_postgresql_url_here
-
-# Development
-NODE_ENV=development
-PORT=5000
-```
-
-### 3. Get Google Gemini API Key
-
-1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create a new API key
-3. Copy the key to your `.env` file
 
 ### 4. Run the Application
 
@@ -147,4 +123,8 @@ The app includes several optimizations:
 
 ## License
 
-MIT License - see LICENSE file for details
+
+
+
+
+http://localhost:5000.

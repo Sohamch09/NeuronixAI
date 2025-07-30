@@ -2,16 +2,16 @@ import { type Message, type InsertMessage, type Conversation, type InsertConvers
 import { randomUUID } from "crypto";
 
 export interface IStorage {
-  // Message operations
+
   createMessage(message: InsertMessage): Promise<Message>;
   getMessagesByConversation(conversationId: string): Promise<Message[]>;
   
-  // Conversation operations
+
   createConversation(conversation: InsertConversation): Promise<Conversation>;
   getConversation(id: string): Promise<Conversation | undefined>;
   getAllConversations(): Promise<Conversation[]>;
   
-  // User operations (keeping existing)
+  
   getUser(id: string): Promise<any | undefined>;
   getUserByUsername(username: string): Promise<any | undefined>;
   createUser(user: any): Promise<any>;
