@@ -40,9 +40,6 @@ npm install
 # Start development server (both frontend and backend)
 npm run dev
 
-# The app will be available at http://localhost:5000
-```
-
 ### 5. Build for Production
 
 ```bash
@@ -53,5 +50,4 @@ npm run build
 npm start
 ```
 
-
-http://localhost:5000.
+You can type it directly -> http://localhost:5000.
